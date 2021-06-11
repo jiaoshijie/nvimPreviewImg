@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+# printf "%s" 'Enter any key to quit...(in Insert mode)'
+{
+  declare -Ap add_command=([action]="add" [identifier]="vimShowImg" \
+    [x]="$1" [y]="$2" [max_width]="$3" [max_height]="$4" [path]="$5")
+  read -n 1
+  # declare -Ap remove_command=([action]="remove" [identifier]="vimShowImg")
+} | ueberzug layer --parser bash 2> /dev/null
