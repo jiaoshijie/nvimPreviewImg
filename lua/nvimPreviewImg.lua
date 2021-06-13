@@ -2,7 +2,7 @@ local api = vim.api
 local win, buf
 local M = {}
 
-local scriptPath = vim.fn.expand('%:p:h') .. '/showImg'
+local scriptPath = vim.fn.expand('<sfile>:p:h') .. '/../showImg'
 
 function M.close_window()
   api.nvim_win_close(win, true)
@@ -62,7 +62,7 @@ local function open_window(path)
   api.nvim_buf_set_option(buf, "bufhidden", "wipe")
   api.nvim_win_set_option(win, "winblend", 0)
   vim.fn.termopen(string.format("%s %s %s %s %s %s", scriptPath, col, row,
-                                win_width, win_height - 1,
+                                win_width, win_height,
                                 vim.fn.shellescape(path)))
 end
 

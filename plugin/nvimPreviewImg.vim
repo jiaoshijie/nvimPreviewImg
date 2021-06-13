@@ -1,2 +1,2 @@
-" there is nothing to do.
+" create keymap
 lua require('nvimPreviewImg').create_commands()
