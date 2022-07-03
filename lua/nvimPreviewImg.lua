@@ -75,6 +75,8 @@ function M.PreviewImg(file)
       open_window(vim.fn.expand('%:p:h') .. '/' .. file)
     elseif file.sub(file, 1, 1) == '/' then
       open_window(file)
+    elseif file.sub(file, 1, 1) == '.' then
+      open_window(file)
     else
       api.nvim_err_writeln("It's not a right path!!!")
     end
