@@ -10,11 +10,30 @@ end
 
 local function open_window(path)
 
-  -- window size
   local width = api.nvim_get_option("columns")
   local height = api.nvim_get_option("lines")
-  local win_height = math.ceil(height * 0.8 - 4)
-  local win_width = math.ceil(width * 0.8)
+
+  local output = vim.fn.split(vim.fn.system("mediainfo " .. path .. " | grep -E 'Width|Height' | cut -d ':' -f2"), '\n')
+
+  local image_width, _ = string.gsub(string.sub(output[1], 2, -7), "%s+", "") -- 8
+  local image_height, _ = string.gsub(string.sub(output[2], 2, -7), "%s+", "")  -- 20
+
+  -- window size
+  local max_win_width = math.ceil(width * 0.8)
+  local max_win_height = math.ceil(height * 0.8 - 4)
+
+  local win_width, win_height
+  local temp_win_height = math.ceil(image_height * max_win_width / image_width / 2)
+
+  if temp_win_height < max_win_height then
+    win_width = max_win_width
+    win_height = temp_win_height
+  else
+    win_width = math.ceil(2.1 * image_width * max_win_height / image_height)
+    win_height = max_win_height
+  end
+
+  -- window position
   local row = math.ceil((height - win_height) / 2 - 1)
   local col = math.ceil((width - win_width) / 2)
 
