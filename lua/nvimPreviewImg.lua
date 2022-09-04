@@ -2,13 +2,11 @@ local api = vim.api
 local win, buf
 local M = {}
 
-local scriptPath = vim.fn.expand('<sfile>:p:h') .. '/../showImg'
-
 function M.close_window()
   api.nvim_win_close(win, true)
 end
 
-local function open_window(path)
+local function open_window(scriptPath, path)
 
   local width = api.nvim_get_option("columns")
   local height = api.nvim_get_option("lines")
@@ -85,28 +83,22 @@ local function open_window(path)
                                 vim.fn.shellescape(path)))
 end
 
-function M.PreviewImg(file)
+function M.PreviewImg(scriptPath, file)
   local current_win = vim.fn.win_getid()
   if current_win == win then
     M.close_window()
   else
+    local path
     if file.sub(file, 1, 2) == '..' then
-      open_window(vim.fn.expand('%:p:h') .. '/' .. file)
-    elseif file.sub(file, 1, 1) == '/' then
-      open_window(file)
-    elseif file.sub(file, 1, 1) == '.' then
-      open_window(file)
+      path = vim.fn.expand('%:p:h') .. '/' .. file
+    elseif file.sub(file, 1, 1) == '/' or file.sub(file, 1, 1) == '.' then
+      path = file
     else
       api.nvim_err_writeln("It's not a right path!!!")
+      return
     end
+    open_window(scriptPath, path)
   end
-end
-
-function M.create_commands()
-  api.nvim_exec([[
-    command! -nargs=? -complete=file ShowImg :lua require('nvimPreviewImg').PreviewImg(<q-args>)
-    nnoremap <silent> <leader>P :ShowImg <cfile><cr>
-  ]], false)
 end
 
 return M
